@@ -110,7 +110,7 @@ contract Venu {
     }
 
     modifier timedTransitions() {
-        if (stage == Stages.AuctionStarted && calcTokenPrice() <= calcStopPrice()) {
+        if (stage == Stages.AuctionStarted) {
             finalizeAuction(); }
         _;
     }
@@ -135,7 +135,7 @@ contract Venu {
             // Arguments are null.
             revert();
         }*/
-        artist = msg.sender;
+        artist = _artist;
         artistName = _artistName;
         minCapacity  = _minCapacity;
         maxCapacity = _maxCapacity;
@@ -200,8 +200,6 @@ contract Venu {
     function bid(uint tickets)
         public
         payable
-        isValidPayload()
-        timedTransitions()
         atStage(Stages.AuctionStarted)
         returns (uint amount)
     {
@@ -222,6 +220,7 @@ contract Venu {
           revert();
           //find a way to print "there are only" maxCapacity - numTickets "tickets remaining"
         }
+
         uint price = calcTokenPrice();
         if (msg.value < price * tickets) {
             revert();
@@ -266,6 +265,7 @@ contract Venu {
     /// @return Returns token price.
     function calcTokenPrice()
         public
+        constant
         returns (uint)
     {
         //changed block.number to 4

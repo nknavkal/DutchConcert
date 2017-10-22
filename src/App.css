@@ -2,11 +2,44 @@
 
 body,
 .pure-g [class*=pure-u] {
+  background-image: url("./bg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
   font-family: 'Open Sans', sans-serif;
 }
 
-table {
-  text-align: center;
+#image {
+  background-image: url("./venu.jpg")
+}
+
+img {
+  width: 40%;
+}
+
+p {
+  color: white;
+}
+
+input[type=number] {
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid gray;
+    color: white;
+    font-size: 14px;
+    width: 30%
+}
+
+input[type=number]:focus {
+    border-bottom: 2px solid white;
+    outline: none;
+}
+
+td, th {
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  color: #fff;
+  overflow: auto;
 }
 
 h1, h2, h3 {
