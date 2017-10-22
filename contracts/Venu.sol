@@ -128,7 +128,7 @@ contract Venu {
      *  Public functions
      */
     /// @dev Contract constructor function sets owner.
-    function Venu(address _artist, string _artistName, uint _minCapacity, uint _maxCapacity, string _eventVenue, uint _eventTime)
+    function venu(address _artist, string _artistName, uint _minCapacity, uint _maxCapacity, string _eventVenue, uint _eventTime)
         public
     {
         if (_artist == 0 || _maxCapacity < 1) {
@@ -152,15 +152,15 @@ contract Venu {
         isArtist()
         atStage(Stages.AuctionDeployed)
     {
-        minRevenue = _minRevenue; 
-        minCapacity = _minCapacity; 
+        minRevenue = _minRevenue;
+        minCapacity = _minCapacity;
         priceFactor = _priceFactor; //TODO: Calculate pricefactor based on given parameters
         artistInterest = true;
         stage = Stages.AuctionSetUp;
         startAuction();
     }
 
-    
+
 
     /// @dev Starts auction and sets startBlock.
     function startAuction()
@@ -222,7 +222,7 @@ contract Venu {
         numTickets += tickets;
 
         totalReceived = numTickets * price; //does this matter??
-        
+
         bidSubmission(msg.sender, amount);
     }
 
