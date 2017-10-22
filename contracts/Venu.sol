@@ -56,6 +56,10 @@ contract Venu {
     uint public numContributors;
     uint private minRevenue;
     address public artist;
+    uint public minCapacity;
+    uint public maxCapacity;
+    string public artist;
+    bool public artistInterest;
 
     uint private priceFactor;
     uint public startBlock;
@@ -143,6 +147,9 @@ contract Venu {
         artist = _artist;
         minCapacity  = _minCapacity;
         maxCapacity = _maxCapacity;
+        eventVenue = _eventVenue;
+        eventTime = _eventTime;
+        artistInterest = false;
 
         stage = Stages.AuctionDeployed;
     }
@@ -165,6 +172,8 @@ contract Venu {
         }
         stage = Stages.AuctionSetUp;
     }
+
+    
 
     /// @dev Starts auction and sets startBlock.
     function startAuction()
