@@ -74,7 +74,7 @@
       "type": "function"
     },
     {
-      "constant": true,
+      "constant": false,
       "inputs": [],
       "name": "calcTokenPrice",
       "outputs": [
@@ -132,6 +132,35 @@
           "type": "bool"
         }
       ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_artistName",
+          "type": "string"
+        },
+        {
+          "name": "_minCapacity",
+          "type": "uint256"
+        },
+        {
+          "name": "_maxCapacity",
+          "type": "uint256"
+        },
+        {
+          "name": "_eventVenue",
+          "type": "string"
+        },
+        {
+          "name": "_eventTime",
+          "type": "uint256"
+        }
+      ],
+      "name": "venu",
+      "outputs": [],
       "payable": false,
       "type": "function"
     },
@@ -451,7 +480,7 @@
       "inputs": [
         {
           "indexed": false,
-          "name": "artist",
+          "name": "performer",
           "type": "address"
         },
         {

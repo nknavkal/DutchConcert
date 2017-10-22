@@ -38,7 +38,7 @@ contract Venu {
      *  Events
      */
     event bidSubmission(address indexed sender, uint256 amount);
-    event artistVerification(address artist, string venue);
+    event artistVerification(address performer, string venue);
     event soldOut(uint totalTickets, uint price);
 
     /*
@@ -131,11 +131,11 @@ contract Venu {
     function venu(address _artist, string _artistName, uint _minCapacity, uint _maxCapacity, string _eventVenue, uint _eventTime)
         public
     {
-        if (_artist == 0 || _maxCapacity < 1) {
+        /*if (1 == 0 || _minCapacity < 1) {
             // Arguments are null.
             revert();
-        }
-        artist = _artist;
+        }*/
+        artist = msg.sender;
         artistName = _artistName;
         minCapacity  = _minCapacity;
         maxCapacity = _maxCapacity;
@@ -230,6 +230,10 @@ contract Venu {
         numTickets += tickets;
 
         totalReceived = numTickets * price; //does this matter??
+        if (totalReceived >= minRevenue && !priceFinalized) {
+            priceFinalized = true;
+            constantPrice = priceFactor * 10**18 / (block.number - startBlock + 7500) + 1;
+        }
 
         bidSubmission(msg.sender, amount);
     }
@@ -251,7 +255,6 @@ contract Venu {
     /// @dev Calculates stop price.
     /// @return Returns stop price.
     function calcStopPrice()
-        constant
         public
         returns (uint)
     {
@@ -262,23 +265,17 @@ contract Venu {
     /// @dev Calculates token price.
     /// @return Returns token price.
     function calcTokenPrice()
-        constant
         public
         returns (uint)
     {
-        if (totalReceived >= minRevenue) {
-            // When maxWei is equal to the big amount the auction is ended and finalizeAuction is triggered.
-            //finalizeAuction();
-            if (!priceFinalized) {
-                priceFinalized = true;
-                constantPrice = priceFactor * 10**18 / (block.number - startBlock + 7500) + 1;
-                return constantPrice;
-            }
-            return constantPrice;
-        }
         //changed block.number to 4
         //changed startBlock to 2
-        return priceFactor * 10**18 / (4 - 2 + 7500) + 1;
+        if (!priceFinalized) {
+            return priceFactor * 10**18 / (4 - 2 + 7500) + 1;
+        }
+        return constantPrice;
+
+
     }
 
     /*
