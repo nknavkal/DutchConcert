@@ -9,7 +9,7 @@ contract('Venu', function(accounts) {
   it("should create a new Venu venue", async () => {
     const venuDeployed = await Venu.deployed();
 
-    await venuDeployed.venu(artist, "Taylor Swift", 250, 500, "Berkeley Greek Theater", Date.now(), {from: fan});
+    await venuDeployed.venu(artist, "Taylor Swift", 250, 500, "Berkeley Greek Theater", Date.now(), {from: owner});
 
     const artistAddress = await venuDeployed.artist();
     assert.equal(artistAddress, artist, 'artist address is incorrect');
@@ -37,7 +37,7 @@ contract('Venu', function(accounts) {
   it("should verify artist change", async () => {
     const venu = await Venu.deployed();
 
-    await venu.verify(100000, 500, 1176, {from: artist});
+    await venu.verify(100000, 500, 1176, 10, {from: artist});
 
     const minRevenue = await venu.minRevenue();
     assert.equal(minRevenue, 100000, 'min revenue is incorrect');
@@ -47,6 +47,9 @@ contract('Venu', function(accounts) {
 
     const priceFactor = await venu.priceFactor();
     assert.equal(priceFactor, 1176, 'price factor is incorrect');
+
+    const endTime = await venu.endTime();
+    assert.equal(endTime, 10, 'end time is incorrect');
 
     const artistInterest = await venu.artistInterest();
     assert.equal(artistInterest, true, 'artist interest is incorrect');
@@ -68,24 +71,17 @@ contract('Venu', function(accounts) {
     assert.equal(expectedEventResult.amount, expectedEventResult.amount, "LogDepositMade event amount property not emmitted, check deposit method");*/
   });
 
-  it("should withdraw correct amount", async () => {
+  /*it("should bid correctly", async () => {
     const venu = await Venu.deployed();
-    const deposit = web3.toBigNumber(2);
 
-    await venu.enroll({from: fan});
-    await venu.enroll({from: artist});
+    await venu.bid(1, {from: fan, value: 1000000000000000000});
 
-    await venu.deposit(deposit, {from: fan});
-    await venu.withdraw(deposit, {from: fan});
+    const calcTokenPrice = await venu.calcTokenPrice();
+    assert.equal(calcTokenPrice, (venu.priceFactor() * 10**18 / (4 - 2 + 7500) + 1), 'calc token price is incorrect');
 
-    const balance = await venu.balance({from: fan});
 
-    assert.equal(deposit.plus(1000).toString(), balance, 'withdraw amount incorrect, check withdraw method');
 
-    await venu.withdraw(deposit, {from: fan});
-
-    assert.equal(deposit.plus(1000).toString(), balance, 'withdraw should fail and throw on insufficient balance, check withdraw method');
-  });
+  });*/
 
 
 });

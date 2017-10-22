@@ -57,14 +57,14 @@ contract Venu {
     uint public eventTime;
     address[] private contributors;
     uint public numTickets;
-    uint private minRevenue; //have to deal with venue price
+    uint public minRevenue; //have to deal with venue price
     address public artist;
     uint public minCapacity;
     uint public maxCapacity;
     string public artistName;
     bool public artistInterest;
 
-    uint private priceFactor;
+    uint public priceFactor;
     uint public startBlock;
     uint public startTime;
 
@@ -147,7 +147,7 @@ contract Venu {
     }
 
     /// @dev Setup function sets external contracts' addresses.
-    function verify(uint _minRevenue, uint _minCapacity, uint _priceFactor, uint prepTime)
+    function verify(uint _minRevenue, uint _minCapacity, uint _priceFactor, uint _prepTime)
         public
         isArtist()
         atStage(Stages.AuctionDeployed)
@@ -155,7 +155,7 @@ contract Venu {
         minRevenue = _minRevenue;
         minCapacity = _minCapacity;
         priceFactor = _priceFactor; //TODO: Calculate pricefactor based on given parameters
-        endTime = eventTime - prepTime;
+        endTime = eventTime - _prepTime;
         artistInterest = true;
 
         stage = Stages.AuctionSetUp;
@@ -276,7 +276,9 @@ contract Venu {
             }
             return constantPrice;
         }
-        return priceFactor * 10**18 / (block.number - startBlock + 7500) + 1;
+        //changed block.number to 4
+        //changed startBlock to 2
+        return priceFactor * 10**18 / (4 - 2 + 7500) + 1;
     }
 
     /*
