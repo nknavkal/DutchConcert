@@ -1,94 +1,44 @@
-import React, { Component } from 'react'
-import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
-import getWeb3 from './utils/getWeb3'
-
-import './css/oswald.css'
-import './css/open-sans.css'
-import './css/pure-min.css'
-import './App.css'
+import React, { Component } from 'react';
+//import logo from './8ball.png';
+import './App.css';
+import {venuContract} from './EthereumSetup.js';
+import web3 from './EthereumSetup.js';
 
 class App extends Component {
-  constructor(props) {
-    super(props)
 
-    this.state = {
-      storageValue: 0,
-      web3: null
+    /*constructor(props) {
+        super(props)
+        this.state = {
+            question: "",
+            answer: "Magic Eight Ball"
+        }
+        this.execute = this.execute.bind(this);
     }
-  }
 
-  componentWillMount() {
-    // Get network provider and web3 instance.
-    // See utils/getWeb3 for more info.
+    execute(e) {
+        var answers = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.", "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.", "Do not count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."];
+        var answers1 = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.", "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes."];
 
-    getWeb3
-    .then(results => {
-      this.setState({
-        web3: results.web3
-      })
+        //var answer = answers1[Math.floor(Math.random()*answers1.length)];
+        var answer = answers[Math.floor(Math.random()*answers.length)];
 
-      // Instantiate contract once web3 provided.
-      this.instantiateContract()
-    })
-    .catch(() => {
-      console.log('Error finding web3.')
-    })
-  }
+        //eightBallContract.transferFrom("0x069fd4784D1DEd8A63923e83fF73c44414240043", {from: "0x5d1EB7D49b406d210726CD627266247F86b71157", value: 1000000000000000});
+        venuContract.transferFrom("0x3dd15c0d78cae8411ef12fcb50c046b90065ae1e", {from: "0x08762bb60a62a1b5c229111b066b741904316bc5", value: 1000000000000000});
+        this.setState({answer});
+    }
 
-  instantiateContract() {
-    /*
-     * SMART CONTRACT EXAMPLE
-     *
-     * Normally these functions would be called in the context of a
-     * state management library, but for convenience I've placed them here.
-     */
-
-    const contract = require('truffle-contract')
-    const simpleStorage = contract(SimpleStorageContract)
-    simpleStorage.setProvider(this.state.web3.currentProvider)
-
-    // Declaring this for later so we can chain functions on SimpleStorage.
-    var simpleStorageInstance
-
-    // Get accounts.
-    this.state.web3.eth.getAccounts((error, accounts) => {
-      simpleStorage.deployed().then((instance) => {
-        simpleStorageInstance = instance
-
-        // Stores a given value, 5 by default.
-        return simpleStorageInstance.set(5, {from: accounts[0]})
-      }).then((result) => {
-        // Get the value from the contract to prove it worked.
-        return simpleStorageInstance.get.call(accounts[0])
-      }).then((result) => {
-        // Update state with the result.
-        return this.setState({ storageValue: result.c[0] })
-      })
-    })
-  }
-
-  render() {
-    return (
-      <div className="App">
-        <nav className="navbar pure-menu pure-menu-horizontal">
-            <a href="#" className="pure-menu-heading pure-menu-link">Truffle Box</a>
-        </nav>
-
-        <main className="container">
-          <div className="pure-g">
-            <div className="pure-u-1-1">
-              <h1>Good to Go!</h1>
-              <p>Your Truffle Box is installed and ready.</p>
-              <h2>Smart Contract Example</h2>
-              <p>If your contracts compiled and migrated successfully, below will show a stored value of 5 (by default).</p>
-              <p>Try changing the value stored on <strong>line 59</strong> of App.js.</p>
-              <p>The stored value is: {this.state.storageValue}</p>
+    render() {
+        return (
+            <div className="App">
+                <img src={ logo } />
+                <h1>{this.state.answer}</h1>
+                <p>Enter your question:<br />
+                <input type="text" /><br /><br />
+                <button onClick={this.execute} type="submit">Donate 30 cents and Answer my Question</button>
+                <br /><br /><span className="answer"></span></p>
             </div>
-          </div>
-        </main>
-      </div>
-    );
+        );
+    }*/
   }
-}
 
-export default App
+export default App;

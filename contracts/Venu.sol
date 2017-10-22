@@ -57,14 +57,14 @@ contract Venu {
     uint public eventTime;
     address[] private contributors;
     uint public numTickets;
-    uint private minRevenue; //have to deal with venue price
+    uint public minRevenue; //have to deal with venue price
     address public artist;
     uint public minCapacity;
     uint public maxCapacity;
     string public artistName;
     bool public artistInterest;
 
-    uint private priceFactor;
+    uint public priceFactor;
     uint public startBlock;
     uint public startTime;
 
@@ -128,7 +128,7 @@ contract Venu {
      *  Public functions
      */
     /// @dev Contract constructor function sets owner.
-    function venu(string _artistName, uint _minCapacity, uint _maxCapacity, string _eventVenue, uint _eventTime)
+    function venu(address _artist, string _artistName, uint _minCapacity, uint _maxCapacity, string _eventVenue, uint _eventTime)
         public
     {
         /*if (1 == 0 || _minCapacity < 1) {
@@ -147,20 +147,22 @@ contract Venu {
     }
 
     /// @dev Setup function sets external contracts' addresses.
-    function verify(uint _minRevenue, uint _minCapacity, uint _priceFactor)
+    function verify(uint _minRevenue, uint _minCapacity, uint _priceFactor, uint _prepTime)
         public
         isArtist()
         atStage(Stages.AuctionDeployed)
     {
-        minRevenue = _minRevenue; 
-        minCapacity = _minCapacity; 
+        minRevenue = _minRevenue;
+        minCapacity = _minCapacity;
         priceFactor = _priceFactor; //TODO: Calculate pricefactor based on given parameters
+        endTime = eventTime - _prepTime;
         artistInterest = true;
+
         stage = Stages.AuctionSetUp;
         startAuction();
     }
 
-    
+
 
     /// @dev Starts auction and sets startBlock.
     function startAuction()
@@ -203,16 +205,22 @@ contract Venu {
         atStage(Stages.AuctionStarted)
         returns (uint amount)
     {
-        // If a bid is done on behalf of a user via ShapeShift, the receiver address is set.
-        if (now - startTime == timeCap) {
+        // If a bid is sent after the bidding period expires, you will be refunded.
+        if (now > endTime) {
             finalizeAuction();
-            msg.sender.transfer(msg.value); //refund sender since he tried to buy after time cap ended
+            msg.sender.transfer(msg.value); //refund sender since he tried to buy after end time ended
             return;
         }
         if (numTickets == maxCapacity) {
             finalizeAuction();
             msg.sender.transfer(msg.value);
             return;
+
+        }
+
+        if (numTickets + tickets > maxCapacity) {
+          revert();
+          //find a way to print "there are only" maxCapacity - numTickets "tickets remaining"
         }
         uint price = calcTokenPrice();
         if (msg.value < price * tickets) {
@@ -222,7 +230,11 @@ contract Venu {
         numTickets += tickets;
 
         totalReceived = numTickets * price; //does this matter??
-        
+        if (totalReceived >= minRevenue && !priceFinalized) {
+            priceFinalized = true;
+            constantPrice = priceFactor * 10**18 / (block.number - startBlock + 7500) + 1;
+        }
+
         bidSubmission(msg.sender, amount);
     }
 
@@ -256,17 +268,14 @@ contract Venu {
         public
         returns (uint)
     {
-        if (totalReceived >= minRevenue) {
-            // When maxWei is equal to the big amount the auction is ended and finalizeAuction is triggered.
-            //finalizeAuction();
-            if (!priceFinalized) {
-                priceFinalized = true;
-                constantPrice = priceFactor * 10**18 / (block.number - startBlock + 7500) + 1;
-                return constantPrice;
-            }
-            return constantPrice;
+        //changed block.number to 4
+        //changed startBlock to 2
+        if (!priceFinalized) {
+            return priceFactor * 10**18 / (4 - 2 + 7500) + 1;
         }
-        return priceFactor * 10**18 / (block.number - startBlock + 7500) + 1;
+        return constantPrice;
+
+
     }
 
     /*
