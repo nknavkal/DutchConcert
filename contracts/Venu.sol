@@ -147,7 +147,7 @@ contract Venu {
     }
 
     /// @dev Setup function sets external contracts' addresses.
-    function verify(uint _minRevenue, uint _minCapacity, uint _priceFactor)
+    function verify(uint _minRevenue, uint _minCapacity, uint _priceFactor, uint prepTime)
         public
         isArtist()
         atStage(Stages.AuctionDeployed)
@@ -155,7 +155,9 @@ contract Venu {
         minRevenue = _minRevenue;
         minCapacity = _minCapacity;
         priceFactor = _priceFactor; //TODO: Calculate pricefactor based on given parameters
+        endTime = eventTime - prepTime;
         artistInterest = true;
+
         stage = Stages.AuctionSetUp;
         startAuction();
     }
@@ -203,16 +205,22 @@ contract Venu {
         atStage(Stages.AuctionStarted)
         returns (uint amount)
     {
-        // If a bid is done on behalf of a user via ShapeShift, the receiver address is set.
-        if (now - startTime == timeCap) {
+        // If a bid is sent after the bidding period expires, you will be refunded.
+        if (now > endTime) {
             finalizeAuction();
-            msg.sender.transfer(msg.value); //refund sender since he tried to buy after time cap ended
+            msg.sender.transfer(msg.value); //refund sender since he tried to buy after end time ended
             return;
         }
         if (numTickets == maxCapacity) {
             finalizeAuction();
             msg.sender.transfer(msg.value);
             return;
+
+        }
+
+        if (numTickets + tickets > maxCapacity) {
+          revert();
+          //find a way to print "there are only" maxCapacity - numTickets "tickets remaining"
         }
         uint price = calcTokenPrice();
         if (msg.value < price * tickets) {
