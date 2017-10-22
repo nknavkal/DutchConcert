@@ -10,4 +10,4 @@ var venuAddress = '0xcb30966e6a15a3577304feccfe383b64b59d8d1c';
 
 const venuContract = web3.eth.contract(venuABI).at(venuAddress);
 
-export {eightBallContract};
+export {venuContract};
