@@ -2,36 +2,39 @@ import React, { Component } from 'react';
 //import logo from './8ball.png';
 import './App.css';
 import {venuContract} from './EthereumSetup.js';
-import web3 from './EthereumSetup.js';
 
 class App extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            currentPrice: "",
-            answer: ""
+            currentPrice: 0
         }
-        this.execute = this.execute.bind(this);
+        //this.execute = this.execute.bind(this);
     }
 
-    execute(e) {
-        window.print("Current Price: " + )
+    componentWillMount() {
+        var data = venuContract.calcTokenPrice.call()
+        console.log(data)
+        this.setState({
+          currentPrice: data
+        })
+        document.write(this.state.currentPrice)
+    }
+
+    execute() {
+        window.print("Current Price: " + this.state.currentPrice)
     }
 
     render() {
         return (
-                <center><table>
-                    <tr onmouseover = "execute()">
-                        Panic! at the Crypto @ Berkeley Greek Theater on 10/31
-                    </tr>
-                    <tr>
-                        Vitalica @ Bill Graham Civic Auditorium on 11/10
-                    </tr>
-                    <tr>
-                        Tupac SHA-kur @ The Warfield on 11/25
-                    </tr>
-                </table></center>
+                <center>
+                    <button onclick = "execute">Panic! at the Crypto @ Berkeley Greek Theater on 10/31</button>
+                    <br />
+                    <button>Vitalica @ Bill Graham Civic Auditorium on 11/10</button>
+                    <br />
+                    <button>Tupac SHA-kur @ The Warfield on 11/25</button>
+                </center>
         );
     }
   }

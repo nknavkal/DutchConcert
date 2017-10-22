@@ -271,7 +271,7 @@ contract Venu {
         //changed block.number to 4
         //changed startBlock to 2
         if (!priceFinalized) {
-            return priceFactor * 10**18 / (4 - 2 + 7500) + 1;
+            return priceFactor * 10**18 / (block.number - startBlock + 7500) + 1;
         }
         return constantPrice;
 
