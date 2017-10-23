@@ -25,7 +25,7 @@ class App extends Component {
     render() {
         return (
             <center>
-                <p><strong>Your Potential Events:</strong></p>
+                <p><strong>Your Potential Events</strong></p>
                 <table>
                     <tr>
                         <th>Location</th>
@@ -39,7 +39,7 @@ class App extends Component {
                         <td>Oracle Arena</td>
                         <td>11/28/17</td>
                         <td>8:00 pm</td>
-                        <td><input type="number" /> ether</td>
+                        <td><input type="number" /> eth</td>
                         <td><input type="number" /> people</td>
                         <td><button>Accept</button>  <button>Deny</button></td>
                     </tr>
